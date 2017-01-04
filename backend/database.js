@@ -41,11 +41,12 @@ DataBase.prototype.close = function () {
 }
 
 
-DataBase.prototype.createRawInformation = function(cid,v1,v2,v3,v4,_callback) {
+DataBase.prototype.createRawInformation = function(cid,date,v1,v2,v3,v4,_callback) {
 	var self = this
 
 	var t = new RawData({  
 		controllerID : cid,
+		time   : date,
 		value1 : v1,
 		value2 : v2,
 		value3 : v3,
