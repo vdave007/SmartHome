@@ -6,10 +6,10 @@ let mongoose = require('mongoose'),
 let rawDataSchema = new Schema({
 	controllerId : String,
 	time   : String,
-	value1 : String,
-	value2 : String,
-	value3 : String,
-	value4 : String
+	value1 : Number,
+	value2 : Number,
+	value3 : Number,
+	value4 : Number
 })
 
 module.exports = mongoose.model('RawData', rawDataSchema)
