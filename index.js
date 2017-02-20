@@ -1,3 +1,4 @@
+"use strict"
 let express = require('express'),
  	app = express(),
  	DataBase = require('./backend/database')
@@ -11,6 +12,6 @@ app.listen(app.get('port'), () => {
 })
 
 
-dataBase = new DataBase()
+var dataBase = new DataBase()
 
 require('./backend/routes')(app,dataBase)

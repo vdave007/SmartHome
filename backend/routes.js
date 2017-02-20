@@ -1,3 +1,4 @@
+"use strict"
 let path = require('path')
 
 var v1;
