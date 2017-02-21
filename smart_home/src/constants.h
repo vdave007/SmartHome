@@ -14,6 +14,7 @@ const std::string WIFI_PASSWORD = "ltdguitars";
 
 const uint8_t NUMBER_OF_SENSORS = 4;
 const uint32_t SAMPLING_TIME = 3000;
+const uint32_t SAMPLING_TIME_UNIT = 800;
 const float RMS_VPP = 0.3535534;
 const float RMS_VP  = 0.7071068;
 const uint16_t M_V_PER_AMP = 66;
@@ -21,3 +22,4 @@ const uint16_t M_V_PER_AMP = 66;
 const int ANALOG_IN = A0;
 
 #endif
+
