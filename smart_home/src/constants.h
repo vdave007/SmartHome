@@ -21,5 +21,7 @@ const uint16_t M_V_PER_AMP = 66;
 
 const int ANALOG_IN = A0;
 
+const uint8_t I2C_MAX_LENGTH = 30;
+
 #endif
 
