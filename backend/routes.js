@@ -14,10 +14,10 @@ module.exports = (app,dataBase) => {
 	        console.log("Az utolso Amper",house_id)
 			if (typeof house_id === 'undefined') house_id = 1
 			house_id = parseInt(house_id)
-			var responseJson = [{"house_id":1,"ampervalue":v1,"amperdate":123},
-								{"house_id":1,"ampervalue":v2,"amperdate":123},
-								{"house_id":1,"ampervalue":v3,"amperdate":123},
-								{"house_id":1,"ampervalue":v4,"amperdate":123}]
+			var responseJson = [{"house_id":1,"ampervalue":v1*0.22,"amperdate":123},
+								{"house_id":1,"ampervalue":v2*0.22,"amperdate":123},
+								{"house_id":1,"ampervalue":v3*0.22,"amperdate":123},
+								{"house_id":1,"ampervalue":v4*0.22,"amperdate":123}]
 			// db.getAmper(house_id,function(returndata){
 				console.log("Response -----------------");
 				console.log(responseJson)

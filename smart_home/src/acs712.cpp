@@ -37,11 +37,12 @@ float Acs712::getACRMS()
   uint32_t start_time = millis();
   while((millis()-start_time) < SAMPLING_TIME)
   {
-    readValue = analogRead(ANALOG_IN) - _defaultNull;
+    readValue = abs(analogRead(ANALOG_IN) - _defaultNull);
     _samplingSum += readValue * readValue;
     ++_samplingCount;
+    delay(10);
   }
-  return (5.0 * sqrt(_samplingSum/_samplingCount) / 1024);
+  return (5.0 * sqrt(_samplingSum/_samplingCount) / 1024.0);
 }
 
 void Acs712::selectSensor()

@@ -23,19 +23,26 @@ void setup()
   pinMode(THIRD_MUX_PIN,OUTPUT);
   pinMode(INHIBIT_PIN,OUTPUT);
   delay(100);
-  
+
   netController->connect(WIFI_SSID,WIFI_PASSWORD);
 
 }
 
+int dataToReport[4];
+
 void loop()
 {
- 
+
   for(auto&& it = acsSensors.begin(); it != acsSensors.end(); ++it)
   {
-    Serial.print((*it)->getSensorNumber());
+    uint8_t num =(*it)->getSensorNumber();
+    float acrms = (*it)->getACRMS();
+    Serial.print(num);
     Serial.print(" - ");
-    Serial.println((*it)->getACRMS());
+    Serial.println(acrms);
+    dataToReport[num] = acrms * 1000;
     delay(100);
   }
+
+  netController->report(dataToReport,4);
 }
