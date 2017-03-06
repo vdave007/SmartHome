@@ -5,7 +5,7 @@
 Acs712::Acs712(uint8_t sensorNumber)
 {
   _sensorNumber = sensorNumber;
-  _defaultNull = 512;
+  _defaultNull = 506;
   _samplingCount = 0;
   _samplingSum = 0;
 }
@@ -28,21 +28,25 @@ uint8_t Acs712::getSensorNumber()
   return _sensorNumber;
 }
 
-float Acs712::getACRMS()
+double Acs712::getACRMS()
 {
   selectSensor();
   _samplingCount = 0;
   _samplingSum = 0;
-  uint16_t readValue;
+  uint32_t readValue;
   uint32_t start_time = millis();
-  while((millis()-start_time) < SAMPLING_TIME)
+  Serial.println(analogRead(ANALOG_IN));
+  // while((millis()-start_time) < SAMPLING_TIME)
+  while(_samplingCount<2000)
   {
     readValue = abs(analogRead(ANALOG_IN) - _defaultNull);
     _samplingSum += readValue * readValue;
     ++_samplingCount;
-    delay(10);
+    // delay(1);
+    delayMicroseconds(100);
   }
-  return (5.0 * sqrt(_samplingSum/_samplingCount) / 1024.0);
+  Serial.println(_samplingCount);
+  return (30.0 * sqrt(_samplingSum/_samplingCount) / 512.0);
 }
 
 void Acs712::selectSensor()

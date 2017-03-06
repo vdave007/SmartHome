@@ -11,7 +11,7 @@ public:
   void setDefaultNull(uint16_t value);
   uint16_t getValue();
   uint8_t getSensorNumber();
-  float getACRMS();
+  double getACRMS();
 
 private:
   void selectSensor();
