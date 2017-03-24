@@ -48,7 +48,7 @@ module.exports = (app) => {
 							if (saveddevice.value - saveddevice.valuedelay <= actualdevice.ampervalue 
 							&& saveddevice.value + saveddevice.valuedelay >= actualdevice.ampervalue)
 							{
-								saveddevice.value = actualdevice.ampervalue
+								saveddevice.value = parseInt(actualdevice.ampervalue)
 								find = true;
 								ds.push(saveddevice)
 							}						
@@ -59,7 +59,7 @@ module.exports = (app) => {
 								house_id : house_id,
 								name : "Unknown",
 								icon_id : 0,
-								value : actualdevice.ampervalue,
+								value : parseInt(actualdevice.ampervalue),
 								valuedelay : 1
 							}
 							ds.push(data)
