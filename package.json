@@ -1,24 +1,22 @@
 {
-  "name": "SmartHome",
-  "description": "SmartHome Backend",
-  "version": "0.0.1",
-  "keywords": [
-    "smarthome"
-  ],
-  "contributors": [
-    {
-      "name": "Vincze David",
-      "email": "vincdave@yahoo.com",
-      "web": "https://github.com/vdave007"
-    }
-  ],
+  "name": "allamvizsga",
+  "version": "1.0.0",
+  "description": "This is a simple application.",
+  "engines": {
+    "node": "4.2.5",
+    "npm": "2.14.12"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "express": "^4.14.0",
-    "mongoose": "^4.7.6"
-  },
-  "repository": {
-      "type": "git",
-      "url": "https://github.com/vdave007/SmartHome.git"
-    },
-  "homepage": "https://github.com/vdave007/SmartHome"
+    "mongoose": "^4.6.5",
+    "socket.io":"^1.7.3",
+    "validator":"^7.0.0"
+  }
 }
