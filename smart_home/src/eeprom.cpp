@@ -27,7 +27,7 @@ void Eeprom::write(uint16_t address, const uint8_t* data, uint8_t dataSize)
     Wire.write((int)(address & 0xFF)); // LSB
     for(uint8_t i = 0; (i < dataSize) && (i < I2C_MAX_LENGTH); ++i)
     {
-      Wire.write(*data);   
+      Wire.write(*data);
     }
     Wire.endTransmission();
 }

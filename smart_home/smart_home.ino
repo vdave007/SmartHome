@@ -21,7 +21,7 @@ int RawValue= 0;
 void turnLeds(int value);
 
 void setup() {
-  
+
   Serial.begin(115200);
   pinMode(firstLed,OUTPUT);
   pinMode(secondLed,OUTPUT);
@@ -39,7 +39,7 @@ void setup() {
    }
    Serial.println("");
    Serial.println("WiFi connected");
-  
+
 }
 
 void loop() {
@@ -48,7 +48,7 @@ void loop() {
     turnLeds(i);
     RawValue = analogRead(analogIn);
     rawValues[i] = RawValue;
-    
+
     delay(100);
   }
 
@@ -88,7 +88,7 @@ void loop() {
     client.println(":8081");
     client.println("Connection: close");
     client.println();
-    
+
   }
 
   while (client.available()) {
@@ -114,7 +114,7 @@ switch(value){
   }
   case 1:
   {
-    //OFF 
+    //OFF
     digitalWrite(firstLed,0);
     digitalWrite(secondLed,0);
     digitalWrite(thirdLed,1);
@@ -175,4 +175,3 @@ switch(value){
   }
 }
 }
-

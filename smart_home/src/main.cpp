@@ -1,5 +1,7 @@
 #include <Arduino.h>
 #include <vector>
+#include "eeprom.h"
+#include "internalEeprom.h"
 #include "acs712.h"
 #include "networkController.h"
 #include "constants.h"
@@ -8,6 +10,7 @@
 
 std::vector<std::unique_ptr<Acs712>> acsSensors;
 std::unique_ptr<NetworkController> netController(new NetworkController());
+InternalEeprom* eeprom;
 
 void setup()
 {
@@ -24,7 +27,10 @@ void setup()
   pinMode(INHIBIT_PIN,OUTPUT);
   delay(100);
 
-  netController->connect(WIFI_SSID,WIFI_PASSWORD);
+  //netController->connect(WIFI_SSID,WIFI_PASSWORD);
+  eeprom = new InternalEeprom();
+  uint8_t test[] = "MCUTEST";
+  eeprom->write(0,test,7);
 
 }
 
@@ -43,6 +49,12 @@ void loop()
     dataToReport[num] = acrms * 1000;
     delay(100);
   }
+  //netController->report(dataToReport,4);
+  Serial.println("DATA = ");
 
-  netController->report(dataToReport,4);
+  for(int i=0;i<7;++i){
+    Serial.print((char)eeprom->read(i));
+  }
+  delay(1000);
+
 }
