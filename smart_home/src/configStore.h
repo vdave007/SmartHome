@@ -4,26 +4,23 @@
 #include "IEeprom.h"
 #include <string>
 #include <map>
+#include "constants.h"
 
-enum class MAPID
-{
-  DEVICE_ID = 0,
-  WIFI_SSID = 1,
-  WIFI_PASS = 2
-};
 
 class ConfigStore
 {
 public:
   ConfigStore(IEeprom* eeprom);
 
-private:
-  void init();
+public:
   std::string get(MAPID mapId);
   void save(MAPID, std::string value);
 
 private:
+  void init();
+private:
   std::map<MAPID,std::string> _configMap;
+  IEeprom* _eeprom;
 
 };
 

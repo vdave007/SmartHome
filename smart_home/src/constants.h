@@ -34,8 +34,15 @@ const uint8_t I2C_MAX_LENGTH = 30;
 /// CONFIG VALUES AND POSITIONS//
 /////////////////////////////////
 
+enum class MAPID
+{
+  DEVICE_ID = 0,
+  WIFI_SSID = 1,
+  WIFI_PASS = 2
+};
+
 //Address,length
-std::pair<uint16_t,uint8_t> EEPROM_DEVICE_ID(0,16);
+const std::pair<uint16_t,uint8_t> EEPROM_DEVICE_ID(0,16);
 const std::pair<uint16_t,uint8_t> EEPROM_WIFI_SSID(16,32);
 const std::pair<uint16_t,uint8_t> EEPROM_WIFI_PASSWORD(48,32);
 
