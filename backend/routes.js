@@ -10,8 +10,8 @@ var validator = require('validator');
 
 var v1 = 2*1000;
 var v2 = 6.5*1000;
-var v3 = 3.1*1000;
-var v4 = 1*1000;
+var v3 = 2.2*1000;
+var v4 = 3.65*1000;
 
 
 module.exports = (app) => {
@@ -48,9 +48,17 @@ module.exports = (app) => {
 							if (saveddevice.value - saveddevice.valuedelay <= actualdevice.ampervalue 
 							&& saveddevice.value + saveddevice.valuedelay >= actualdevice.ampervalue)
 							{
-								saveddevice.value = parseInt(actualdevice.ampervalue)
 								find = true;
-								ds.push(saveddevice)
+								saveddevice.original_value = parseInt(saveddevice.value)
+								var data = {  
+									house_id : house_id,
+									name : saveddevice.name,
+									icon_id : saveddevice.icon_id,
+									value : parseInt(actualdevice.ampervalue),
+									original_value : parseInt(saveddevice.value),
+									valuedelay : 1
+								}
+								ds.push(data)
 							}						
 						},this)
 						if (!find)
@@ -60,6 +68,7 @@ module.exports = (app) => {
 								name : "Unknown",
 								icon_id : 0,
 								value : parseInt(actualdevice.ampervalue),
+								original_value : parseInt(actualdevice.ampervalue),
 								valuedelay : 1
 							}
 							ds.push(data)
@@ -317,7 +326,7 @@ module.exports = (app) => {
 			
 		var user_email = req.param('user_email')
 		var house_id = req.param('house_id')
-		console.log('feltolt userhouse : ' +user_email,house_id);
+		console.log('feltolt userhouse : ' +user_email , house_id);
 		if (typeof user_email === 'undefined') return
 		if (typeof house_id === 'undefined') return
 		if (!validator.isEmail(user_email)) {res.json('hakker'); return}
@@ -327,12 +336,26 @@ module.exports = (app) => {
 		})
 	})
 	
+	app.get('/deleteuserhouse', (req,res) => {
+			
+		var user_email = req.param('user_email')
+		var house_id = req.param('house_id')
+		console.log('torol userhouse : ' +user_email , house_id);
+		if (typeof user_email === 'undefined') return
+		if (typeof house_id === 'undefined') return
+		if (!validator.isEmail(user_email)) {res.json('hakker'); return}
+		
+		db.DeleteUserHouse(user_email,house_id,function(err){
+			res.json(err)
+		})
+	})
+	
 	
 	app.get('/setusersmartwatch', (req,res) => {
 			
 		var user_email = req.param('user_email')
 		var smartwatch_id = req.param('smartwatch_id')
-		console.log('feltolt userhouse : ' +user_email,smartwatch_id);
+		console.log('feltolt userSmartWatch : ' +user_email,smartwatch_id);
 		if (typeof user_email === 'undefined') return
 		if (typeof smartwatch_id === 'undefined') return
 		if (!validator.isEmail(user_email)) {res.json('hakker'); return}
