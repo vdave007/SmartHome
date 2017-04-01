@@ -288,12 +288,12 @@ Db.prototype.createUserMessage = function (u_email,passwd,_callback){
 			t.save(function(err) {
 					if (err) 
 						return _callback(err)
-					return _callback("user registred successful")
+					return _callback(true)
 			})
 		}
 		else 
 		{
-			return _callback("user exists")
+			return _callback(false)
 		}
 	});
 }
@@ -368,12 +368,12 @@ Db.prototype.createUserHouseMessage = function (u_email,h_id,_callback){
 					t.save(function(err) {
 							if (err) 
 								return _callback(err)
-							return _callback("userhouse registred successful")
+							return _callback(true)
 					})
 				}
 				else 
 				{
-					return _callback("user has house already")
+					return _callback(false)
 				}
 			});	
 	    }
@@ -403,17 +403,43 @@ Db.prototype.createUserSmartWatchMessage = function (user_email,smartwatch_id,_c
 					t.save(function(err) {
 							if (err) 
 								return _callback(err)
-							return _callback("usersmartwatch registred successful")
+							return _callback(true)
 					})
 				}
 				else 
 				{
-					return _callback("user has smartwatch already")
+					return _callback(false)
+				}
+			});	
+	    }
+	})
+}
+	
+Db.prototype.deleteUserHouse = function (u_email,h_id,_callback){
+	var self = this
+	
+	User.findOne({user_email:u_email},function(err, doc) {
+	    if (err || doc == null)
+	    {
+	    	return _callback(false)
+	    }
+	    else
+	    {
+			UserHouse.findOne({ user_email: u_email,house_id : h_id }, function (err, doc){	
+				if (err || doc == null) 
+				{
+					return _callback(false);
+				}
+				else 
+				{
+					doc.remove();
+					return _callback(true);
 				}
 			});	
 	    }
 	})
 	
 }
+
 
 

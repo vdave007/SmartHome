@@ -43,35 +43,39 @@ module.exports = (app) => {
 				 {
 					 var ds = []
 					 responseJson.forEach(function(actualdevice) {
-						var find = false;
-						returndatadevice.forEach(function(saveddevice) {					
-							if (saveddevice.value - saveddevice.valuedelay <= actualdevice.ampervalue 
-							&& saveddevice.value + saveddevice.valuedelay >= actualdevice.ampervalue)
+					 	if (actualdevice.ampervalue != 0)
+						{	
+							var find = false;
+							returndatadevice.forEach(function(saveddevice) {
+								
+								if (saveddevice.value - saveddevice.valuedelay <= actualdevice.ampervalue 
+								&& saveddevice.value + saveddevice.valuedelay >= actualdevice.ampervalue)
+								{
+									find = true;
+									saveddevice.original_value = parseInt(saveddevice.value)
+									var data = {  
+										house_id : house_id,
+										name : saveddevice.name,
+										icon_id : saveddevice.icon_id,
+										value : parseInt(actualdevice.ampervalue),
+										original_value : parseInt(saveddevice.value),
+										valuedelay : 1
+									}
+									ds.push(data)
+								}
+							},this)
+							if (!find)
 							{
-								find = true;
-								saveddevice.original_value = parseInt(saveddevice.value)
 								var data = {  
 									house_id : house_id,
-									name : saveddevice.name,
-									icon_id : saveddevice.icon_id,
+									name : "Unknown",
+									icon_id : 0,
 									value : parseInt(actualdevice.ampervalue),
-									original_value : parseInt(saveddevice.value),
+									original_value : parseInt(actualdevice.ampervalue),
 									valuedelay : 1
 								}
 								ds.push(data)
-							}						
-						},this)
-						if (!find)
-						{
-							var data = {  
-								house_id : house_id,
-								name : "Unknown",
-								icon_id : 0,
-								value : parseInt(actualdevice.ampervalue),
-								original_value : parseInt(actualdevice.ampervalue),
-								valuedelay : 1
 							}
-							ds.push(data)
 						}	
 					}, this);
 					console.log(ds)
@@ -345,7 +349,7 @@ module.exports = (app) => {
 		if (typeof house_id === 'undefined') return
 		if (!validator.isEmail(user_email)) {res.json('hakker'); return}
 		
-		db.DeleteUserHouse(user_email,house_id,function(err){
+		db.deleteUserHouse(user_email,house_id,function(err){
 			res.json(err)
 		})
 	})
