@@ -21,6 +21,7 @@ private:
 private:
   std::map<MAPID,std::string> _configMap;
   IEeprom* _eeprom;
+  uint8_t _buffer[32];
 
 };
 

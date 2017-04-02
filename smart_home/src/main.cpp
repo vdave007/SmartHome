@@ -26,7 +26,6 @@ void setup()
   pinMode(FIRST_MUX_PIN,OUTPUT);
   pinMode(SECOND_MUX_PIN,OUTPUT);
   pinMode(THIRD_MUX_PIN,OUTPUT);
-  pinMode(INHIBIT_PIN,OUTPUT);
   delay(100);
 
   netController->connect(WIFI_SSID,WIFI_PASSWORD);

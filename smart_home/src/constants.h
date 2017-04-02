@@ -5,10 +5,9 @@
 #include <string>
 #include <utility>
 
-const uint8_t FIRST_MUX_PIN = 16;//GPIO16
-const uint8_t SECOND_MUX_PIN = 0;//GPIO5
-const uint8_t THIRD_MUX_PIN = 2;//GPIO4
-const uint8_t INHIBIT_PIN = 14;
+const uint8_t FIRST_MUX_PIN = 16;//GPIO16 D1
+const uint8_t SECOND_MUX_PIN = 0;//GPIO5 D3
+const uint8_t THIRD_MUX_PIN = 2;//GPIO4 D4
 
 const char BACKEND_SERVER_IP[] = "192.168.0.77";
 const char BACKEND_POST_API[] = "/saveRawData?cid=";
