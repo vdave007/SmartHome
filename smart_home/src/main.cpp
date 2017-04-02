@@ -10,8 +10,9 @@
 
 
 std::vector<std::unique_ptr<Acs712>> acsSensors;
-std::unique_ptr<NetworkController> netController(new NetworkController());
-std::unique_ptr<ConfigStore> configStore(new ConfigStore(new InternalEeprom()));
+// std::unique_ptr<ConfigStore> configStore(new ConfigStore(new InternalEeprom()));
+std::unique_ptr<ConfigStore> configStore(new ConfigStore(new Eeprom(0x50)));
+std::unique_ptr<NetworkController> netController(new NetworkController(configStore.get()));
 
 void setup()
 {
@@ -28,7 +29,7 @@ void setup()
   pinMode(INHIBIT_PIN,OUTPUT);
   delay(100);
 
-  //netController->connect(WIFI_SSID,WIFI_PASSWORD);
+  netController->connect(WIFI_SSID,WIFI_PASSWORD);
 
 }
 
@@ -47,9 +48,9 @@ void loop()
     dataToReport[num] = acrms * 1000;
     delay(100);
   }
-  //netController->report(dataToReport,4);
-  Serial.print("Device ID = ");
-  Serial.println(configStore->get(MAPID::DEVICE_ID).c_str());
+  netController->report(dataToReport,4);
+  // Serial.print("Device ID = ");
+  // Serial.println(configStore->get(MAPID::DEVICE_ID).c_str());
   delay(1000);
 
 }

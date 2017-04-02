@@ -2,12 +2,15 @@
 #include "constants.h"
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
+#include "configStore.h"
 
-NetworkController::NetworkController()
+NetworkController::NetworkController(ConfigStore* configStore)
 {
   _postApi = const_cast<char*>(BACKEND_POST_API);
   _host = const_cast<char*>(BACKEND_SERVER_IP);
   _hostPort = BACKEND_SERVER_PORT;
+
+  _configStore = configStore;
 }
 
 void NetworkController::connect(const std::string ssid, const std::string password)
@@ -34,7 +37,9 @@ bool NetworkController::report(int* data, uint8_t numberOfData)
 
       client.print("GET "); //REWRITE TO POST!!!
       client.print(_postApi);
-      client.print(1337); // ID HERE
+      Serial.print("ID - ");
+      Serial.println(_configStore->get(MAPID::DEVICE_ID).c_str());
+      client.print(_configStore->get(MAPID::DEVICE_ID).c_str()); // ID HERE
 
       for(uint8_t i=1; i<=numberOfData; ++i) // printing the datas
       {
