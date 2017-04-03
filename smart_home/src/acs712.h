@@ -20,6 +20,7 @@ private:
   uint16_t _defaultNull;
   uint8_t _sensorNumber;
   uint64_t _samplingSum;
+  uint64_t _samplingSum2;
   uint32_t _samplingCount;
 };
 
