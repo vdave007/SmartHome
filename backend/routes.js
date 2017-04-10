@@ -91,24 +91,37 @@ module.exports = (app) => {
 			// })
 	})
 	
-	app.get('/saveRawData', (req, res) => {
-		res.json({info: "This is my backend!"})
-		console.log(req.query);
-		var cid = req.query.cid
+	// app.post('/saveRawData', (req, res) => {
+	// 	//res.json({info: "This is my backend!"})
+	// 	console.log(req.query);
+	// 	var cid = req.query.cid
+	// 	var _date = new Date()
+	// 	var date = _date.getTime()
+	// 	v1 = req.query.v1
+	// 	v2 = req.query.v2
+	// 	v3 = req.query.v3
+	// 	v4 = req.query.v4
+	// 	console.log(cid,date,v1,v2,v3,v4)
+	// 	// db.createRawInformation(cid,date,v1,v2,v3,v4,function(error){
+	// 	// 	if(error){
+	// 	// 		console.error('error:',error)
+	// 	// 	}
+	// 	// })
+	// })
+	// // davide reszenek vege --
+	app.post('/saveRawData', (req, res) => {
+		//res.json({info: "This is my backend!"})
+		console.log(req.body);
+		var cid = req.body.cid
 		var _date = new Date()
 		var date = _date.getTime()
-		v1 = req.query.v1
-		v2 = req.query.v2
-		v3 = req.query.v3
-		v4 = req.query.v4
+		v1 = req.body.v1
+		v2 = req.body.v2
+		v3 = req.body.v3
+		v4 = req.body.v4
 		console.log(cid,date,v1,v2,v3,v4)
-		// db.createRawInformation(cid,date,v1,v2,v3,v4,function(error){
-		// 	if(error){
-		// 		console.error('error:',error)
-		// 	}
-		// })
+		res.send("OK");
 	})
-	// davide reszenek vege --
 	
 
 	app.get('/setamper', (req,res) => {

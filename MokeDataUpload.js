@@ -24,9 +24,27 @@ function UploadData() {
     }
     else {i=0;j=0;}
     
-    request("https://allamvizsga-akoszsebe.c9users.io/saveRawData?cid=69&v1="+v1+"&v2="+v2+"&v3="+v3+"&v4="+v4, function(error, response, body) {
-        console.log(body);
-    });
+    // request("https://allamvizsga-akoszsebe.c9users.io/saveRawData?cid=69&v1="+v1+"&v2="+v2+"&v3="+v3+"&v4="+v4, function(error, response, body) {
+    //     console.log(body);
+    // });
+    request({
+    url: "https://allamvizsga-akoszsebe.c9users.io/saveRawData?cid=69&v1="+v1+"&v2="+v2+"&v3="+v3+"&v4="+v4,
+    method: "POST",
+    headers: {
+        // header info - in case of authentication enabled
+    },
+    json:{
+        // body goes here
+    }, function(err, res, body){
+        if(!err){
+            // do your thing
+        }else{
+            // handle error
+        }
+    }});
 }
+
+
+
 
 setInterval(UploadData,2000);
