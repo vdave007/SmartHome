@@ -2,6 +2,7 @@
 #include "constants.h"
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
 #include "configStore.h"
 
 NetworkController::NetworkController(ConfigStore* configStore)
@@ -29,38 +30,22 @@ void NetworkController::connect(const std::string ssid, const std::string passwo
 bool NetworkController::report(int* data, uint8_t numberOfData)
 {
   Serial.println("Starting report");
+  HTTPClient http;
+  std::string postString("cid=");
+  http.begin("http://192.168.1.210:8080/saveRawData"); //HTTP
+  http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+  postString += _configStore->get(MAPID::DEVICE_ID);
+    for(uint8_t i=1; i<=numberOfData; ++i) // printing the datas
+    {
+      postString += "&v";
+      postString += String(i).c_str();
+      postString += "=";
+      postString += String(*data).c_str();
+      ++data;
+    }
 
-  WiFiClient client;
-  if(client.connect(_host,_hostPort))
-  {
-      Serial.println("connected to server");
-
-      client.print("GET "); //REWRITE TO POST!!!
-      client.print(_postApi);
-      Serial.print("ID - ");
-      Serial.println(_configStore->get(MAPID::DEVICE_ID).c_str());
-      client.print(_configStore->get(MAPID::DEVICE_ID).c_str()); // ID HERE
-
-      for(uint8_t i=1; i<=numberOfData; ++i) // printing the datas
-      {
-        client.print("&v");
-        client.print(i);
-        client.print("=");
-        Serial.print(*data);
-        client.print(*data);
-        ++data;
-      }
-
-      client.println(" HTTP/1.1");
-      client.print("Host: ");
-      client.print(_host);
-      client.print(":");
-      client.println(_hostPort);
-      client.println("Connection: close");
-      client.println();
-
-      client.stop();
-  }
+  http.POST(postString.c_str());
+  http.end();
 
   Serial.println("Reporting complete");
 
