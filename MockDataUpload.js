@@ -28,13 +28,17 @@ function UploadData() {
     //     console.log(body);
     // });
     request({
-    url: "https://allamvizsga-akoszsebe.c9users.io/saveRawData?cid=69&v1="+v1+"&v2="+v2+"&v3="+v3+"&v4="+v4,
+    url: "https://allamvizsga-akoszsebe.c9users.io/saveRawData",
     method: "POST",
     headers: {
         // header info - in case of authentication enabled
     },
     json:{
-        // body goes here
+        cid:69,
+        v1 : v1,
+        v2 : v2,
+        v3 : v3,
+        v4 : v4
     }, function(err, res, body){
         if(!err){
             // do your thing
