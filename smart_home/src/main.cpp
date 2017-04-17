@@ -48,6 +48,7 @@ void loop()
     delay(100);
   }
   netController->report(dataToReport,4);
+
   // Serial.print("Device ID = ");
   // Serial.println(configStore->get(MAPID::DEVICE_ID).c_str());
   delay(1000);

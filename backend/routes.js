@@ -9,6 +9,9 @@ var v4;
 
 module.exports = (app,dataBase) => {
 
+	app.get('/getConfigurationPage', (req,res) => {
+		res.sendFile(path.resolve('./backend/pages/configpage.html'))
+	})
 
 	app.get('/getamper', (req, res) => {
 			var house_id = req.param('house_id')
