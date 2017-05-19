@@ -78,7 +78,7 @@ module.exports = (app) => {
 							}
 						}	
 					}, this);
-					console.log(ds)
+					//console.log(ds)
 					res.json(ds)
 				 }
 				
