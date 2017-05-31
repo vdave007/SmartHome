@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  database:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    restart: always
+    volumes:
+      - ./database:/data/db
+    command: mongod --smallfiles --logpath=/dev/null
+
+  server:
+    image: node:latest
+    build: .
+    volumes:
+       - ./:/usr/src/app
+    ports:
+      - 8081:8080
+    depends_on:
+      - database
+    links:
+      - database
+    environment:
+      PORT: 8080

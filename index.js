@@ -3,7 +3,7 @@ let express = require('express'),
  	app = express(),
  	DataBase = require('./backend/database')
 
-app.set('port', process.env.PORT || 8081)
+app.set('port', process.env.PORT || 8080)
 
 app.use(express.static(__dirname + ''))
 

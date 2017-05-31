@@ -45,6 +45,9 @@ module.exports = (app,dataBase) => {
 		})
 	})
 
+	app.get('/', (req,res) => {
+		res.send("SmartHomeServer")
+	})
 
 
 
