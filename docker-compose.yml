@@ -15,6 +15,7 @@ services:
     build: .
     volumes:
        - ./:/usr/src/app
+       - node_modules:/usr/src/app/node_modules
     ports:
       - 8081:8080
     depends_on:
@@ -23,3 +24,5 @@ services:
       - database
     environment:
       PORT: 8080
+volumes:
+  node_modules:
