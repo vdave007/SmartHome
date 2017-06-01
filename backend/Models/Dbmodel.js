@@ -207,16 +207,14 @@ Db.prototype.getUserHouses = function (user_email,_callback) {
 	}) 
 }
 
-Db.prototype.createHouseMessage = function (hname,passwd,_callback){
+Db.prototype.createHouseMessage = function (hname,hid,passwd,_callback){
 	var self = this
 	
-	var hid = 0;
-	House.findOne({},'-_id -__v',(error, house) => {
+	House.findOne({"house_id":hid },'-_id -__v',(error, house) => {
 		if (error) { hid = 0; }
-		else { 
-			if (house != null) 
-				hid = house.house_id + 1 
-			}
+		if (house == null) 
+		{	
+			
 			console.log("h---------------id : "+hid)
 			var t = new House({  
 				house_id : hid,
@@ -228,17 +226,26 @@ Db.prototype.createHouseMessage = function (hname,passwd,_callback){
 					if (err) 
 						return _callback(err)
 			})
+			return _callback(null)
+		}
+		else return _callback("van mar")
 	}).sort({ 'house_id': 'ascending' })
-	
-	
-	
-	return _callback(null)
 }
 
 Db.prototype.getHousesByName = function (hname,_callback){
 	var self = this
 	
 	House.find({ "house_name": { "$regex": hname, "$options": "i" } }, '-_id -__v', (error, houses) => {
+		if (error) { return _callback(null) }
+		return _callback(houses)
+	})
+}
+
+
+Db.prototype.getHousesById = function (hid ,_callback){
+	var self = this
+	console.log("----",hid)
+	House.find( {"$where": "function() { return this.house_id.toString().match(/"+hid+"/) != null; }"}, '-_id -__v', (error, houses) => {
 		if (error) { return _callback(null) }
 		return _callback(houses)
 	})

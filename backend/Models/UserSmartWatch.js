@@ -5,7 +5,7 @@ let mongoose = require('mongoose'),
 
 let usersmartwatchSchema = new Schema({
 	user_email : String,
-	smartwatch_id : Number
+	smartwatch_id : String
 })
 
 module.exports = mongoose.model('usersmartwatches', usersmartwatchSchema)

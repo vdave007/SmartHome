@@ -280,19 +280,29 @@ module.exports = (app) => {
 		})
 	})
 
+	app.get('/gethousesbyid', (req, res) => {
+        console.log("hAzaklkj")
+		var house_id = req.param('house_id')
+		if (typeof house_id === 'undefined' || house_id == "") {res.json(null); return}
+		db.getHousesById(house_id, function(returndata){
+			 console.log(returndata)
+			res.json(returndata)
+		})
+	})
+
 
 	app.get('/sethouse', (req,res) => {
 			
 		var house_name = req.param('house_name')
-		if (typeof house_name === 'undefined') return		
-
-		console.log('feltolt house' +house_name);
+		var house_id = req.param('house_id')
+		if (typeof house_name === 'undefined') house_name = ""	
+		if (typeof house_id === 'undefined' || house_id=="") { res.json(null); return }
+		console.log('feltolt house ' +house_name,house_id);
 
 		var passwd = "vad"
 
-		db.createHouseMessage(house_name,passwd,function(err){
-			if (err) console.error(err) 
-			res.json('success');           
+		db.createHouseMessage(house_name,house_id,passwd,function(err){
+			res.json(err);           
 		})
 	})
 	
