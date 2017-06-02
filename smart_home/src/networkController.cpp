@@ -16,9 +16,9 @@ NetworkController::NetworkController(ConfigStore* configStore):
   _hostPort = stringToNumber(_configStore->get(MAPID::BACKEND_PORT));
 
   std::string address("http://");
-  address += BACKEND_SERVER_IP;
+  address += _host;
   address += ":";
-  address += String(BACKEND_SERVER_PORT).c_str();
+  address += String(_hostPort).c_str();
   address += BACKEND_POST_API;
 
   _reportAddress = address;
@@ -41,6 +41,7 @@ void NetworkController::connect(const std::string ssid, const std::string passwo
 bool NetworkController::report(int* data, uint8_t numberOfData)
 {
   Serial.println("Starting report");
+  Serial.print("Address: ");Serial.println(_reportAddress.c_str());
   HTTPClient http;
   std::string postString("cid=");
 

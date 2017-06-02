@@ -136,8 +136,23 @@ void ConfigStore::save(MAPID mapId, std::string value)
     case MAPID::BACKEND_IP:
     {
       address = EEPROM_BACKEND_IP.first;
-      length = EEPROM_BACKEND_IP.second;
-      break;
+      
+      length = value.length();
+      uint32_t firstBit = 0;
+      uint32_t lastBit = 16;
+      std::string tempValue;
+      while(firstBit!=lastBit)
+      {
+        tempValue = value.substr(firstBit,lastBit-firstBit);
+        Serial.print("Length of write = "); Serial.println(lastBit-firstBit);
+        Serial.print("Writing value");Serial.println(tempValue.c_str());
+        strcpy((char*)_buffer,tempValue.c_str());
+        _eeprom->write(address+firstBit, _buffer, lastBit-firstBit);
+        delay(15);
+        firstBit=lastBit;
+        lastBit+= ((length-lastBit)/16) ? 16 : (length-lastBit)%16;
+      }
+      return;
     }
 
     case MAPID::BACKEND_PORT:
