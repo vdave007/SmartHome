@@ -9,8 +9,15 @@ var v4;
 
 module.exports = (app,dataBase) => {
 
-	app.get('/getConfigurationPage', (req,res) => {
+	app.get('/device/getConfigurationPage', (req,res) => {
 		res.sendFile(path.resolve('./backend/pages/configpage.html'))
+	})
+
+	app.get('/device/getUniqueIdentifier', (req,res) => {
+		res.send('xxxx-xxxx-yyxxxx'.replace(/[xy]/g, function(c) {
+			var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+			return v.toString(16);
+		}))
 	})
 
 	app.get('/getamper', (req, res) => {

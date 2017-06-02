@@ -5,14 +5,8 @@
 Acs712::Acs712(uint8_t sensorNumber)
 {
   _sensorNumber = sensorNumber;
-  _defaultNull = 506;
   _samplingCount = 0;
   _samplingSum = 0;
-}
-
-void Acs712::setDefaultNull(uint16_t value)
-{
-  _defaultNull = value;
 }
 
 uint16_t Acs712::getValue()
