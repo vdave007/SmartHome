@@ -1,4 +1,4 @@
-version: '3'
+version: '2.1'
 
 services:
   database:
@@ -17,7 +17,7 @@ services:
        - ./:/usr/src/app
        - node_modules:/usr/src/app/node_modules
     ports:
-      - 8081:8080
+      - 8080:8080
     depends_on:
       - database
     links:
