@@ -139,7 +139,7 @@ void ConfigStore::save(MAPID mapId, std::string value)
       
       length = value.length();
       uint32_t firstBit = 0;
-      uint32_t lastBit = 16;
+      uint32_t lastBit = (length>16) ? 16 : length;
       std::string tempValue;
       while(firstBit!=lastBit)
       {
@@ -180,7 +180,7 @@ void ConfigStore::save(MAPID mapId, std::string value)
       address = EEPROM_CONFIG_PAGE.first;
       length = value.length();
       uint32_t firstBit = 0;
-      uint32_t lastBit = 16;
+      uint32_t lastBit = (length>16) ? 16 : length;
       std::string tempValue;
       while(firstBit!=lastBit)
       {

@@ -162,7 +162,9 @@ void NetworkController::handleSetBackendConfiguration()
   else
     {
       Serial.print("Saving Backend address:");Serial.println(_webServer->arg("backendaddress"));
+      Serial.print("Length of Backend address:");Serial.println(_webServer->arg("backendaddress").length());
       Serial.print("Saving Backend port:");Serial.println(_webServer->arg("backendport"));
+      Serial.print("Length of Backend port:");Serial.println(_webServer->arg("backendport").length());
       _configStore->save(MAPID::BACKEND_IP,_webServer->arg("backendaddress").c_str());
       _configStore->save(MAPID::BACKEND_PORT,_webServer->arg("backendport").c_str());
       _webServer->send(200,"text/html","<h1>Successfully set Backend. \
