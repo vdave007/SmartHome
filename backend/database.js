@@ -1,4 +1,4 @@
-"fuse strict"
+"use strict"
 let mongoose = require('mongoose'),
 	path = require('path'),
 	RawData = require(path.resolve('./backend/models/rawdata.js'))
