@@ -19,10 +19,12 @@
   "dependencies": {
     "express": "^4.15.3",
     "mongoose": "^4.7.6"
+    "body-parser": "^1.17.1"
+
   },
   "repository": {
-      "type": "git",
-      "url": "https://github.com/vdave007/SmartHome.git"
-    },
+    "type": "git",
+    "url": "https://github.com/vdave007/SmartHome.git"
+  },
   "homepage": "https://github.com/vdave007/SmartHome"
 }

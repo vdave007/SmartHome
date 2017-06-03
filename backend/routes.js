@@ -1,6 +1,7 @@
 "use strict"
 let path = require('path')
 
+
 var v1;
 var v2;
 var v3;
@@ -8,6 +9,16 @@ var v4;
 
 module.exports = (app,dataBase) => {
 
+	app.get('/device/getConfigurationPage', (req,res) => {
+		res.sendFile(path.resolve('./backend/pages/configpage.html'))
+	})
+
+	app.get('/device/getUniqueIdentifier', (req,res) => {
+		res.send('xxxx-xxxx-yyxxxx'.replace(/[xy]/g, function(c) {
+			var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+			return v.toString(16);
+		}))
+	})
 
 	app.get('/getamper', (req, res) => {
 			var house_id = req.param('house_id')
@@ -27,22 +38,23 @@ module.exports = (app,dataBase) => {
 
 
 
-	app.get('/saveRawData', (req, res) => {
-		res.json({info: "This is my backend!"})
-		console.log(req.query);
-		var cid = req.query.cid
+	app.post('/saveRawData', (req, res) => {
+		//res.json({info: "This is my backend!"})
+		console.log(req.body);
+		var cid = req.body.cid
 		var _date = new Date()
 		var date = _date.getTime()
-		v1 = req.query.v1
-		v2 = req.query.v2
-		v3 = req.query.v3
-		v4 = req.query.v4
+		v1 = req.body.v1
+		v2 = req.body.v2
+		v3 = req.body.v3
+		v4 = req.body.v4
 		console.log(cid,date,v1,v2,v3,v4)
 		dataBase.createRawInformation(cid,date,v1,v2,v3,v4,function(error){
 			if(error){
 				console.error('error:',error)
 			}
 		})
+		res.send("OK");
 	})
 
 	app.get('/', (req,res) => {
