@@ -5,7 +5,9 @@
 Eeprom::Eeprom(uint8_t deviceAddress):
   _deviceAddress(deviceAddress)
 {
-    Wire.begin();
+    Wire.begin(SPI_SDL_PIN,SPI_CLK_PIN);
+    Serial.begin(115200);
+
 }
 
 uint8_t Eeprom::read(uint16_t address)
@@ -20,20 +22,48 @@ uint8_t Eeprom::read(uint16_t address)
     return rdata;
 }
 
+void Eeprom::read(uint16_t address,uint8_t* data, uint8_t dataSize)
+{
+  Serial.print("EEPROM Read from - ");
+  Serial.print(address);
+  Serial.print(" - ");
+  Serial.print(dataSize);
+  Serial.print("amount of data");
+  Serial.print("- :");
+  uint8_t i = 0;
+  Wire.beginTransmission(_deviceAddress);
+  Wire.write((int)(address >> 8)); // MSB
+  Wire.write((int)(address & 0xFF)); // LSB
+  Wire.endTransmission();
+  Wire.requestFrom(_deviceAddress,dataSize);
+
+  while (Wire.available())
+  {
+    data[i] = Wire.read();
+    Serial.print((char)data[i]);
+    ++i;
+  }
+  Serial.println(":EEPROM-READ-STOP!");
+}
+
 void Eeprom::write(uint16_t address, const uint8_t* data, uint8_t dataSize)
 {
+  Serial.print("WRITING TO EEPROM :");
     Wire.beginTransmission(_deviceAddress);
     Wire.write((int)(address >> 8)); // MSB
     Wire.write((int)(address & 0xFF)); // LSB
     for(uint8_t i = 0; (i < dataSize) && (i < I2C_MAX_LENGTH); ++i)
     {
-      Wire.write(*data);   
+      Serial.print((char)data[i]);
+      Wire.write(data[i]);
     }
     Wire.endTransmission();
+  Serial.println(": EEPROM-WRITE-STOP");
 }
 
 void Eeprom::write(uint16_t address, const uint8_t data)
 {
+  Serial.println("WRITING TO EEPROM!");
     Wire.beginTransmission(_deviceAddress);
     Wire.write((int)(address >> 8)); // MSB
     Wire.write((int)(address & 0xFF)); // LSB

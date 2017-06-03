@@ -1,13 +1,35 @@
+/**
+  Energy
+  Flow
+  Observing
+  Smart
+  Equipment
+  
+  E.F.O.S.E
+**/
+
+//Set this to true if you want to download the configuration page and (optional) ID from the backend
+#define FIRST_RUN false
+
+//Set this to true ONLY if you want a new CID for the device
+#define CHANGE_CID false
+
 #include <Arduino.h>
 #include <vector>
+#include "eeprom.h"
+#include "internalEeprom.h"
 #include "acs712.h"
 #include "networkController.h"
 #include "constants.h"
+#include "configStore.h"
 #include <memory>
+#include "utils.h"
 
+bool startInConfigMode = false;
 
 std::vector<std::unique_ptr<Acs712>> acsSensors;
-std::unique_ptr<NetworkController> netController(new NetworkController());
+std::unique_ptr<ConfigStore> configStore(new ConfigStore(new Eeprom(0x50)));
+std::unique_ptr<NetworkController> netController(new NetworkController(configStore.get()));
 
 void setup()
 {
@@ -21,18 +43,45 @@ void setup()
   pinMode(FIRST_MUX_PIN,OUTPUT);
   pinMode(SECOND_MUX_PIN,OUTPUT);
   pinMode(THIRD_MUX_PIN,OUTPUT);
-  pinMode(INHIBIT_PIN,OUTPUT);
+  pinMode(CONFIGURATION_MODE_PIN,INPUT);
   delay(100);
 
-  netController->connect(WIFI_SSID,WIFI_PASSWORD);
+  if(digitalRead(CONFIGURATION_MODE_PIN))
+  {
+    Serial.println("Starting configuration mode!");
+    startInConfigMode = true;
+    netController->createAccessPoint(CONFIG_WIFI_SSID,CONFIG_WIFI_PASSWORD);
+  }
+  else
+  {
+    Serial.println("Starting normal mode!");
+    netController->connect(configStore->get(MAPID::WIFI_SSID),configStore->get(MAPID::WIFI_PASS));;
+
+    if(FIRST_RUN)
+    {
+      if(CHANGE_CID)
+      {
+        std::string configCid = netController->get("/device/getUniqueIdentifier").c_str();
+        configStore->save(MAPID::DEVICE_ID,configCid);
+      }
+
+      std::string configurationPage = netController->get("/device/getConfigurationPage").c_str();
+
+      configStore->save(MAPID::CONFIG_PAGE_SIZE,numberToString(configurationPage.length()));
+      configStore->save(MAPID::CONFIG_PAGE,configurationPage);
+    }
+    Serial.println();
+  }
+
+  
+
 
 }
 
 int dataToReport[4];
 
-void loop()
+void normalMode()
 {
-
   for(auto&& it = acsSensors.begin(); it != acsSensors.end(); ++it)
   {
     uint8_t num =(*it)->getSensorNumber();
@@ -43,6 +92,24 @@ void loop()
     dataToReport[num] = acrms * 1000;
     delay(100);
   }
-
   netController->report(dataToReport,4);
+
+  delay(1000);
+}
+
+void configMode()
+{
+  netController->handleClient();
+}
+
+void loop()
+{
+  if(startInConfigMode)
+  {
+    configMode();
+  }
+  else
+  {
+    normalMode();
+  }
 }
