@@ -136,7 +136,6 @@ void ConfigStore::save(MAPID mapId, std::string value)
     case MAPID::BACKEND_IP:
     {
       address = EEPROM_BACKEND_IP.first;
-      
       length = value.length();
       uint32_t firstBit = 0;
       uint32_t lastBit = (length>16) ? 16 : length;
@@ -151,6 +150,10 @@ void ConfigStore::save(MAPID mapId, std::string value)
         delay(15);
         firstBit=lastBit;
         lastBit+= ((length-lastBit)/16) ? 16 : (length-lastBit)%16;
+      }
+      if(lastBit < EEPROM_BACKEND_IP.second)
+      {
+        _eeprom->write(address+length,0);
       }
       return;
     }
@@ -193,6 +196,7 @@ void ConfigStore::save(MAPID mapId, std::string value)
         firstBit=lastBit;
         lastBit+= ((length-lastBit)/16) ? 16 : (length-lastBit)%16;
       }
+      _eeprom->write(address+length,0);
       return;
     }
   }
