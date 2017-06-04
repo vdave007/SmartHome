@@ -211,7 +211,6 @@ Db.prototype.createHouseMessage = function (hname,hid,passwd,_callback){
 	var self = this
 	
 	House.findOne({"house_id":hid },'-_id -__v',(error, house) => {
-		if (error) { hid = 0; }
 		if (house == null) 
 		{	
 			
@@ -224,9 +223,9 @@ Db.prototype.createHouseMessage = function (hname,hid,passwd,_callback){
 			
 			t.save(function(err) {
 					if (err) 
-						return _callback(err)
+						return _callback(false)
+					return _callback(true)
 			})
-			return _callback(null)
 		}
 		else return _callback("van mar")
 	}).sort({ 'house_id': 'ascending' })
@@ -432,6 +431,7 @@ Db.prototype.deleteUserHouse = function (u_email,h_id,_callback){
 	    }
 	    else
 	    {
+	    	console.log('torol userhouse : ' +doc);
 			UserHouse.findOne({ user_email: u_email,house_id : h_id }, function (err, doc){	
 				if (err || doc == null) 
 				{

@@ -4,7 +4,7 @@ let mongoose = require('mongoose'),
 	Schema = mongoose.Schema
 
 let houseSchema = new Schema({
-	house_id : Number,
+	house_id : String,
 	house_name : String,
 	password : String
 })

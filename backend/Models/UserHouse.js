@@ -5,7 +5,7 @@ let mongoose = require('mongoose'),
 
 let userhouseSchema = new Schema({
 	user_email : String,
-	house_id : Number
+	house_id : String
 })
 
 module.exports = mongoose.model('UserHouses', userhouseSchema)

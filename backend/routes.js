@@ -20,8 +20,7 @@ module.exports = (app) => {
 	app.get('/getamper', (req, res) => {
 		var house_id = req.param('house_id')
         console.log("Az utolso Amper",house_id)
-		if (typeof house_id === 'undefined') house_id = 1
-		house_id = parseInt(house_id)
+		if (typeof house_id === 'undefined') house_id = "1"
 		db.getAmper(house_id,function(returndata){
 			 console.log(returndata)
 			res.json(returndata)
@@ -32,8 +31,7 @@ module.exports = (app) => {
 	app.get('/getdeviceswithsettings', (req, res) => { ///getliveamper
 			var house_id = req.param('house_id')
 	        console.log("Az utolso Amper",house_id)
-			if (typeof house_id === 'undefined') house_id = 1
-			house_id = parseInt(house_id)
+			if (typeof house_id === 'undefined') house_id = "1"
 			var responseJson = [{"house_id":1,"ampervalue":v1*0.22,"amperdate":123},
 								{"house_id":1,"ampervalue":v2*0.22,"amperdate":123},
 								{"house_id":1,"ampervalue":v3*0.22,"amperdate":123},
@@ -137,6 +135,12 @@ module.exports = (app) => {
 		})
 	})
 
+	app.get('/device/getUniqueIdentifier', (req,res) => {
+		res.send('xxxx-xxxx-yyxxxx'.replace(/[xy]/g, function(c) {
+			var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+			return v.toString(16);
+		}))
+	})
 
 	app.get('/setdevicesetting', (req,res) => {
 	
@@ -151,7 +155,6 @@ module.exports = (app) => {
 		if (typeof icon_id === 'undefined') return
 		if (typeof value === 'undefined') return
 		if (typeof valuedelay === 'undefined') return
-		house_id = parseInt(house_id)
 		icon_id = parseInt(icon_id)
 		value = parseInt(value)
 		valuedelay = parseInt(valuedelay)
@@ -171,9 +174,10 @@ module.exports = (app) => {
 		var value = req.param('value')
 		if (typeof house_id === 'undefined') return
 		if (typeof value === 'undefined') return
-		house_id = parseInt(house_id)
+		
 		value = parseInt(value)
-
+		
+		console.log("----torol ",house_id,value)
 		db.deleteDeviceSettingMessage(house_id,value,function(err){
 			if (err) console.error(err) 
 			res.json('success');           
@@ -185,8 +189,8 @@ module.exports = (app) => {
 		var datefrom = req.param('date_from')
 		var dateto = req.param('date_to')
 		console.log("Az osszes amper ",datefrom,dateto)
-		if (typeof house_id === 'undefined') house_id = 1
-		house_id = parseInt(house_id)
+		if (typeof house_id === 'undefined') house_id = "1"
+
 		db.getAmperInterval(house_id,datefrom,dateto,function(returndata){
 			res.json(returndata)
 		})
@@ -196,8 +200,8 @@ module.exports = (app) => {
 	app.get('/getdevicesetting', (req, res) => {
 		var house_id = req.param('house_id')
 		console.log('devsett----')
-		if (typeof house_id === 'undefined') house_id = 1
-		house_id = parseInt(house_id)
+		if (typeof house_id === 'undefined') house_id = "1"
+
 		db.getDeviceSetting(house_id,function(returndata){
 			res.json(returndata)
 		})

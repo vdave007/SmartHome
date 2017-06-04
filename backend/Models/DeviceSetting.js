@@ -4,7 +4,7 @@ let mongoose = require('mongoose'),
 	Schema = mongoose.Schema
 
 let deviceSetting = new Schema({
-	house_id : Number,
+	house_id : String,
     name : String,
 	icon_id : Number,
 	value : Number,

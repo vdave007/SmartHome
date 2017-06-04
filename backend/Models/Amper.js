@@ -4,7 +4,7 @@ let mongoose = require('mongoose'),
 	Schema = mongoose.Schema
 
 let amperSchema = new Schema({
-	house_id : Number,
+	house_id : String,
 	ampervalue : Number,
 	amperdate : Number
 })
