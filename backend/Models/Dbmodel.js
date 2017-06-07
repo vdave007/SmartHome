@@ -146,7 +146,8 @@ Db.prototype.createDeviceSettingMessage = function (hid,n,icid,v,vd,_callback){
 		{
 			console.log(doc)
 			doc.name = n;
-			doc.icon_id = icid,
+			doc.icon_id = icid;
+			doc.valuedelay = vd;
 			doc.save();
 			console.log(doc)
 		}

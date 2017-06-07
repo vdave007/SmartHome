@@ -57,7 +57,7 @@ module.exports = (app) => {
 										icon_id : saveddevice.icon_id,
 										value : parseInt(actualdevice.ampervalue),
 										original_value : parseInt(saveddevice.value),
-										valuedelay : 1
+										valuedelay : saveddevice.valuedelay
 									}
 									ds.push(data)
 								}
@@ -158,7 +158,7 @@ module.exports = (app) => {
 		icon_id = parseInt(icon_id)
 		value = parseInt(value)
 		valuedelay = parseInt(valuedelay)
-		console.log('frissit');
+		console.log('frissit',valuedelay);
 		
 		db.createDeviceSettingMessage(house_id,name,icon_id,value,valuedelay,function(err){
 			if (err) console.error(err) 
