@@ -66,12 +66,13 @@ bool NetworkController::report(int* data, uint8_t numberOfData)
 std::string NetworkController::get(const std::string getAddress)
 {
   std::string address("http://");
-  address += BACKEND_SERVER_IP;
+  address += _host;
   address += ":";
-  address += String(BACKEND_SERVER_PORT).c_str();
+  address += String(_hostPort).c_str();
   address += getAddress;
   HTTPClient http;
   String payload;
+  Serial.print("Getting from :");Serial.println(address.c_str());
   http.begin(address.c_str()); //HTTP
   int httpCode = http.GET();
    if(httpCode > 0)
@@ -83,7 +84,8 @@ std::string NetworkController::get(const std::string getAddress)
    }
    else
    {
-     payload = "GET FAILED!";
+     Serial.print("HTTP CODE:");Serial.println(httpCode);
+     payload = "";
    }
    http.end();
    return std::string(payload.c_str());
