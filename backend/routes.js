@@ -7,6 +7,9 @@ var Db = require('./Models/Dbmodel')
 var db = new Db()
 var validator = require('validator');
 
+var Mail = require('./Models/Mail');
+var mail = new Mail();
+
 
 var v1 = 2*1000;
 var v2 = 6.5*1000;
@@ -420,6 +423,19 @@ module.exports = (app) => {
 		})
 	})
 	
+	
+	app.get('/resetuserpassword', (req, res) => {
+
+        var user_email = req.param('user_email')
+        var reset_code = req.param('reset_code')
+        console.log("rest user password ",user_email)
+		if (typeof user_email === 'undefined') return
+		
+		if (!validator.isEmail(user_email)) {res.json('hakker'); return}
+		
+		mail.sendMail(user_email,reset_code)
+		res.json(null)
+	})
 }
 
 
