@@ -6,6 +6,7 @@ let path = require('path'),
 	House = require('./House'),
 	User = require("./User"),
 	UserHouse = require("./UserHouse"),
+	ResetPassword = require("./ResetPassword"),
 	UserSmartWatch = require("./UserSmartWatch"),
 	mongoose = require('mongoose')
 
@@ -232,6 +233,26 @@ Db.prototype.createHouseMessage = function (hname,hid,passwd,_callback){
 	}).sort({ 'house_id': 'ascending' })
 }
 
+
+Db.prototype.updateHouseName = function (hname,hid,_callback){
+	var self = this
+	
+	House.findOne({"house_id":hid },(error, house) => {
+		if (error || house == null) 
+		{	
+		}
+		else
+		{
+			console.log("h---------------id : "+hid, house)
+			
+			house.house_name = hname
+
+			house.save()
+			return _callback(true)
+		}
+	})
+}
+
 Db.prototype.getHousesByName = function (hname,_callback){
 	var self = this
 	
@@ -273,7 +294,11 @@ Db.prototype.updateHouseMessage = function (hid,hname,passwd,_callback){
 			console.log(doc)
 			doc.house_name = hname
 			doc.password = passwd
-			doc.save()
+			doc.save(function(err) {
+					if (err) 
+						return _callback(false)
+					return _callback(true)
+			})
 		}
 	});
 	
@@ -294,13 +319,18 @@ Db.prototype.createUserMessage = function (u_email,passwd,_callback){
 		{
 			t.save(function(err) {
 					if (err) 
-						return _callback(err)
+						return _callback(false)
 					return _callback(true)
 			})
 		}
 		else 
 		{
-			return _callback(false)
+			doc.password = passwd;
+			doc.save(function(err) {
+					if (err) 
+						return _callback(false)
+					return _callback(true)
+			})
 		}
 	});
 }
@@ -311,11 +341,18 @@ Db.prototype.LoginUser = function (u_email,passwd,_callback){
 	User.findOne({ user_email: u_email,password : passwd }, function (err, doc){	
 		if (err || doc == null) 
 		{
-			return _callback(false)
+			User.findOne({ user_email: u_email }, function (err, doc){
+				if (err || doc == null)
+				{
+					return _callback('false')
+				}
+				else 
+					return _callback('Wrong password')
+			});
 		}
 		else 
 		{
-			return _callback(true)
+			return _callback('true')
 		}
 	});
 }
@@ -353,7 +390,7 @@ Db.prototype.getUserSmartWatch = function (user_email,_callback){
 	})
 }
 
-Db.prototype.createUserHouseMessage = function (u_email,h_id,_callback){
+Db.prototype.createUserHouseMessage = function (u_email,h_id,passwd, _callback){
 	var self = this
 	
 	// create a Temperature json object 
@@ -362,7 +399,7 @@ Db.prototype.createUserHouseMessage = function (u_email,h_id,_callback){
 		house_id : h_id
 	})
 	
-	User.findOne({user_email:u_email},function(err, doc) {
+	User.findOne({user_email:u_email, password : passwd},function(err, doc) {
 	    if (err || doc == null)
 	    {
 	    	return _callback(err)
@@ -450,4 +487,42 @@ Db.prototype.deleteUserHouse = function (u_email,h_id,_callback){
 }
 
 
+Db.prototype.savePasswordReset = function (u_email,r_code,expire_time,_callback){
+	var self = this
+	
+	var t = new ResetPassword({  
+		user_email : u_email,
+		reset_code : r_code,
+		expire : expire_time
+	})
+	
+	ResetPassword.findOne({ user_email: u_email }, function (err, doc){	
+		if (err || doc == null) 
+		{
+			t.save(function(err) {
+					if (err) 
+						return _callback(err)
+					return _callback(true)
+			})
+		}
+		else 
+		{
+			doc.reset_code = r_code;
+			doc.expire = expire_time;
+			doc.save(function(err) {
+					if (err) 
+						return _callback(err)
+					return _callback(true)
+			})
+		}
+	});
+}
 
+Db.prototype.getResetPassword = function (user_email,_callback){
+	var self = this
+	
+	ResetPassword.findOne({ user_email: user_email }, '-_id -__v -user_email', (error, resetpasswd) => {
+		if (error) { return _callback(null) }
+		return _callback(resetpasswd)
+	})
+}

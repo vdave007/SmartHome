@@ -14,12 +14,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^1.0.2",
     "body-parser": "^1.17.1",
+    "crypto": "0.0.3",
     "express": "^4.14.0",
     "http": "^0.0.0",
     "mongoose": "^4.6.5",
     "nodemailer": "^4.0.1",
+    "request-json": "^0.6.2",
     "socket.io": "^1.7.3",
+    "twilio": "^3.4.0",
     "validator": "^7.0.0"
   }
 }

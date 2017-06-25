@@ -6,9 +6,14 @@ DeviceSetting = require('./Models/DeviceSetting')
 var Db = require('./Models/Dbmodel')
 var db = new Db()
 var validator = require('validator');
+var Encrypter = require('./Models/Encrypter')
+var encrypter = new Encrypter();
 
-var Mail = require('./Models/Mail');
-var mail = new Mail();
+//var Mail = require('./Models/Mail');
+//var mail = new Mail();
+
+var Sms = require('./Models/Sms');
+var sms = new Sms();
 
 
 var v1 = 2*1000;
@@ -306,9 +311,22 @@ module.exports = (app) => {
 		if (typeof house_id === 'undefined' || house_id=="") { res.json(null); return }
 		console.log('feltolt house ' +house_name,house_id);
 
-		var passwd = "vad"
+		var passwd = encrypter.encrypt("vad")
 
 		db.createHouseMessage(house_name,house_id,passwd,function(err){
+			res.json(err);           
+		})
+	})
+	
+	app.get('/updatehousename', (req,res) => {
+			
+		var house_name = req.param('house_name')
+		var house_id = req.param('house_id')
+		if (typeof house_name === 'undefined') return	
+		if (typeof house_id === 'undefined' || house_id=="") { res.json(null); return }
+		console.log('feltolt house ' +house_name,house_id);
+
+		db.updateHouseName(house_name,house_id,function(err){
 			res.json(err);           
 		})
 	})
@@ -322,7 +340,7 @@ module.exports = (app) => {
 		if (typeof password === 'undefined') return
 		if (!validator.isEmail(user_email)) {res.json('hakker'); return}
 		
-		db.createUserMessage(user_email,password,function(err){
+		db.createUserMessage(user_email,encrypter.encrypt(password),function(err){
 			res.json(err)
 		})
 	})
@@ -332,12 +350,12 @@ module.exports = (app) => {
 		var user_email = req.param('user_email')
 		var password = req.param('password')
 		console.log('login : ' +user_email,password);
-		if (typeof user_email === 'undefined') return
-		if (typeof password === 'undefined') return
+		if (typeof user_email === 'undefined') {res.json('Email required'); return}
+		if (typeof password === 'undefined') { res.json('Password required'); return}
 
-		if (!validator.isEmail(user_email)) {res.json('hakker'); return}
+		if (!validator.isEmail(user_email)) {res.json('Wrong email address'); return}
 
-		db.LoginUser(user_email,password,function(isregisterd){
+		db.LoginUser(user_email,encrypter.encrypt(password),function(isregisterd){
 			if (isregisterd !== 'undefined'	) 
 				res.json(isregisterd);           
 		})
@@ -360,12 +378,14 @@ module.exports = (app) => {
 			
 		var user_email = req.param('user_email')
 		var house_id = req.param('house_id')
+		var passwd = req.param('password')
 		console.log('feltolt userhouse : ' +user_email , house_id);
-		if (typeof user_email === 'undefined') return
-		if (typeof house_id === 'undefined') return
+		if (typeof user_email === 'undefined') {res.json('Wrong email'); return}
+		if (typeof house_id === 'undefined') {res.json('Wrong id'); return}
+		if (typeof passwd === 'undefined') {res.json('Wrong password'); return}
 		if (!validator.isEmail(user_email)) {res.json('hakker'); return}
 		
-		db.createUserHouseMessage(user_email,house_id,function(err){
+		db.createUserHouseMessage(user_email,house_id,encrypter.encrypt(passwd),function(err){
 			res.json(err)
 		})
 	})
@@ -427,14 +447,60 @@ module.exports = (app) => {
 	app.get('/resetuserpassword', (req, res) => {
 
         var user_email = req.param('user_email')
+        var number = req.param('number')
         var reset_code = req.param('reset_code')
         console.log("rest user password ",user_email)
 		if (typeof user_email === 'undefined') return
 		
 		if (!validator.isEmail(user_email)) {res.json('hakker'); return}
 		
-		mail.sendMail(user_email,reset_code)
-		res.json(null)
+		var reset_code = 'xxxxx'.replace(/[x]/g, function(c) {
+			var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+			 return v.toString(16);
+		});
+	//	mail.sendMail(user_email,reset_code)
+		if (number === 'undefined' || number === "")
+		//mail.sendMail(user_email,reset_code)
+		;
+		else
+			sms.sendSms(number,reset_code)
+	
+		console.log('resetcode = ', reset_code)
+		db.savePasswordReset(user_email,reset_code,new Date().getTime(),function(returndata){
+		res.json(returndata)
+		})	
+	})
+	
+	
+	app.get('/getresetuserpassword', (req, res) => {
+
+        var user_email = req.param('user_email')
+        var reset_code = req.param('reset_code')
+        console.log("get rest user password ",user_email)
+		if (typeof user_email === 'undefined') return
+		
+		if (!validator.isEmail(user_email)) {res.json('hakker'); return}
+		
+		db.getResetPassword(user_email,function(returndata){
+		if (returndata != null)
+		{
+			console.log(returndata.reset_code,returndata.expire);
+			if ((returndata.expire + 60000*5) > new Date().getTime())
+			{
+					console.log("not expired");
+					if (returndata.reset_code == reset_code)
+					{
+						console.log("reset_codes match");
+						res.json(true);
+						return;
+					}
+			}
+			res.json(false);
+			return;
+		}
+		else
+			res.json(false);
+		})
 	})
 }
 

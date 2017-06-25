@@ -1,36 +1,58 @@
 'use strict'
 
 var sockets = [],
-    user_data = [],
     arraydiff = require('array-difference')
 
 // --- ez majd nem igy kell ---   
 var request = require("request");
 //  --------------------------
 
-
 module.exports = (io) => {
 
     var socketnumber = 0;
+
+    var interval;
+    
     
     io.on('connection', function(socket){
         console.log('connected');
-        var interval;
+        socketnumber++
+
         
         socket.on('register', function(msg){
+            console.log(msg);
             msg = JSON.parse(msg)
-            sockets.push(socket)
-            msg.id += socketnumber
-            socketnumber++
-            user_data.push(msg)
-            console.log('new user', msg.id +" --- "+ msg.house_ids);
+            if (sockets.length == 0)
+                {
+                    console.log("null socket szam");
+                    socket.user_data = msg;
+                    sockets.push(socket)
+                    console.log('new user',msg.guid +" --- "+ msg.house_ids);
+                }
+            else 
+                sockets.forEach(function(item) {
+                    if (item.user_data.guid.toString().trim() === msg.guid.toString().trim()){
+                        console.log("egal");
+                        //socket.disconnect();
+                    }
+                    else 
+                    {
+                        console.log("nem egal");
+                        socket.user_data = msg;
+                        sockets.push(socket)
+                
+                        console.log('new user',msg.guid +" --- "+ msg.house_ids);
+                    }
+            });
+            
             clearInterval(interval);
             interval = setInterval(interval_notification,5000);
         });
         
         socket.on('disconnect', function () {
             socketnumber--
-            delete sockets[socketnumber]
+            socket.disconnect();
+            delete sockets.pop(socket)
             console.log('diconnected', socketnumber);
             clearInterval(interval);
             interval = setInterval(interval_notification,5000);
@@ -40,11 +62,8 @@ module.exports = (io) => {
     });
     
     function interval_notification(){
-        var index = 0;
         sockets.forEach(function(s){
-            //({name: 'Pista' ,  age:85 },[{ name: 'John', age:30 },{ name: 'Pista', age:35 },{ name: 'Sarah', age: 50 }]))
-            // irjam meg a salyat diff fugvenyem
-            user_data[index].house_ids.forEach(function(house_id){
+            s.user_data.house_ids.forEach(function(house_id){
                 request("https://allamvizsga-akoszsebe.c9users.io/getdeviceswithsettings?house_id="+house_id, function(error, response, body) {
                     var olddata  = [];
                     var newdata  = [];
@@ -63,7 +82,7 @@ module.exports = (io) => {
                             diff.forEach(function(d){
                                 JSON.parse(body).forEach(function(n){
                                             console.log('iiiiiii----------- ',n.original_value,d)
-                                          if (n.original_value == d)
+                                          if (n.original_value == d && n.icon_id != 0)
                                           returndata.push(n)
                                 })
                             })
@@ -75,7 +94,7 @@ module.exports = (io) => {
                     
                 });
             })
-            index++
+           // console.log('iiiiiii----------- ',sockets.length,s.user_data.house_ids)
         })
     }
 }

@@ -51,4 +51,4 @@ function UploadData() {
 
 
 
-setInterval(UploadData,2000);
+setInterval(UploadData,5000);
