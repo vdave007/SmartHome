@@ -335,6 +335,39 @@ Db.prototype.createUserMessage = function (u_email,passwd,_callback){
 	});
 }
 
+
+Db.prototype.createUserMessage = function (u_email,passwd,number,_callback){
+	var self = this
+	
+	// create a Temperature json object 
+	var t = new User({  
+		user_email : u_email,
+		password : passwd,
+		phone_number : number
+	})
+	
+	User.findOne({ user_email: u_email }, function (err, doc){	
+		if (err || doc == null) 
+		{
+			t.save(function(err) {
+					if (err) 
+						return _callback(false)
+					return _callback(true)
+			})
+		}
+		else 
+		{
+			doc.password = passwd;
+			doc.phone_number = number;
+			doc.save(function(err) {
+					if (err) 
+						return _callback(false)
+					return _callback(true)
+			})
+		}
+	});
+}
+
 Db.prototype.LoginUser = function (u_email,passwd,_callback){
 	var self = this
 	
@@ -353,6 +386,21 @@ Db.prototype.LoginUser = function (u_email,passwd,_callback){
 		else 
 		{
 			return _callback('true')
+		}
+	});
+}
+
+Db.prototype.UserPhoneNumber = function (u_email,_callback){
+	var self = this
+	
+	User.findOne({ user_email: u_email }, function (err, doc){	
+		if (err || doc == null) 
+		{
+			return _callback(false)
+		}
+		else 
+		{
+			return _callback(doc.phone_number)
 		}
 	});
 }

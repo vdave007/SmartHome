@@ -16,6 +16,5 @@ Sms.prototype.sendSms = function(to,message)
         to:   "+4"+to, 
         from: "+12512202536", 
         body: "Reset Code: "+message}, function(err, message) { 
-        console.log(message.sid); 
     });
 }

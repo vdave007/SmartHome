@@ -335,14 +335,19 @@ module.exports = (app) => {
 			
 		var user_email = req.param('user_email')
 		var password = req.param('password')
+		var number = req.param('number')
 		console.log('feltolt user : ' +user_email,password);
 		if (typeof user_email === 'undefined') return
 		if (typeof password === 'undefined') return
 		if (!validator.isEmail(user_email)) {res.json('hakker'); return}
-		
-		db.createUserMessage(user_email,encrypter.encrypt(password),function(err){
-			res.json(err)
-		})
+		if (number === '')
+			db.createUserMessage(user_email,encrypter.encrypt(password),function(err){
+				res.json(err)
+			})
+		else 
+			db.createUserMessage(user_email,encrypter.encrypt(password),number,function(err){
+				res.json(err)
+			})
 	})
 	
 	app.get('/login', (req,res) => {
@@ -447,7 +452,7 @@ module.exports = (app) => {
 	app.get('/resetuserpassword', (req, res) => {
 
         var user_email = req.param('user_email')
-        var number = req.param('number')
+        var inmail = req.param('inmail')
         var reset_code = req.param('reset_code')
         console.log("rest user password ",user_email)
 		if (typeof user_email === 'undefined') return
@@ -459,11 +464,33 @@ module.exports = (app) => {
 			 return v.toString(16);
 		});
 	//	mail.sendMail(user_email,reset_code)
-		if (number === 'undefined' || number === "")
+		if (inmail === 'undefined' || inmail === "True")
 		//mail.sendMail(user_email,reset_code)
-		;
+		console.log("mail",inmail)
 		else
-			sms.sendSms(number,reset_code)
+		{ 
+			db.UserPhoneNumber(user_email,function(phone_number){
+				console.log("sms",inmail, phone_number)
+				if (phone_number != false)
+				if (phone_number != undefined)
+				{
+					if (phone_number.match("([0-9]{10})"))
+					{
+					
+						console.log("sms",inmail)
+						sms.sendSms(phone_number,reset_code);
+					}
+					else
+					{	console.log("mail",inmail)
+						//mail.sendMail(user_email,reset_code)
+					}
+				}
+				else
+					{	console.log("mail",inmail)
+						//mail.sendMail(user_email,reset_code)
+					}
+			});
+		}
 	
 		console.log('resetcode = ', reset_code)
 		db.savePasswordReset(user_email,reset_code,new Date().getTime(),function(returndata){
