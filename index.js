@@ -2,7 +2,8 @@
 let express = require('express'),
 	bodyParser = require('body-parser'),
  	app = express(),
- 	DataBase = require('./backend/database')
+ 	DataBase = require('./backend/database'),
+	CurrentAI = require('./backend/currentai')
 
 app.set('port', process.env.PORT || 8080)
 
@@ -19,7 +20,8 @@ app.listen(app.get('port'), () => {
 	console.info('App is running on port ', app.get('port'))
 })
 
+var ai = new CurrentAI()
 
 var dataBase = new DataBase()
 
-require('./backend/routes')(app,dataBase)
+require('./backend/routes')(app,dataBase,ai)

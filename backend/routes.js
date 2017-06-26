@@ -1,11 +1,8 @@
 "use strict"
 let path = require('path')
-let FixedMultiQueue = require ('./fixedmultiqueue')
-
-var currentValues = [];
 
 
-module.exports = (app,dataBase) => {
+module.exports = (app,dataBase,ai) => {
 
 	app.get('/device/getConfigurationPage', (req,res) => {
 		res.sendFile(path.resolve('./backend/pages/configpage.html'))
@@ -20,22 +17,20 @@ module.exports = (app,dataBase) => {
 
 	app.get('/getamper', (req, res) => {
 			var cid = req.param('cid')
-
-			if(currentValues[cid]==undefined)
+			var latestData = ai.getLatestValues(cid)
+			if(latestData==undefined)
 			{
 				res.send('INVALID CID!')
 				return
 			}
-
-			var latestData = currentValues[cid].getLatestDataObject()
 			console.log('Getting data',latestData)
 
 	        console.log("The latest measurment on device ",cid)
 						
-			var responseJson = [{"cid":cid,"ampervalue":parseInt(latestData[0])*0.22,"amperdate":123},
-								{"cid":cid,"ampervalue":parseInt(latestData[1])*0.22,"amperdate":123},
-								{"cid":cid,"ampervalue":parseInt(latestData[2])*0.22,"amperdate":123},
-								{"cid":cid,"ampervalue":parseInt(latestData[3])*0.22,"amperdate":123}]
+			var responseJson = [{"cid":cid,"ampervalue":latestData[0],"amperdate":123},
+								{"cid":cid,"ampervalue":latestData[1],"amperdate":123},
+								{"cid":cid,"ampervalue":latestData[2],"amperdate":123},
+								{"cid":cid,"ampervalue":latestData[3],"amperdate":123}]
 			// db.getAmper(house_id,function(returndata){
 				console.log("Response -----------------");
 				console.log(responseJson)
@@ -44,21 +39,18 @@ module.exports = (app,dataBase) => {
 	})
 
 	app.post('/saveRawData', (req, res) => {
-		//res.json({info: "This is my backend!"})
-		console.log(req.body);
-		var cid = req.body.cid
+		// console.log(req.body);
+		console.log(req.query);
+		var cid = req.query.cid
 		var _date = new Date()
 		var date = _date.getTime()
-		if(currentValues[cid]==undefined)
-		{
-			currentValues[cid] = new FixedMultiQueue(4);
-		}
-		
-		var v1 = req.body.v1
-		var v2 = req.body.v2
-		var v3 = req.body.v3
-		var v4 = req.body.v4
-		currentValues[cid].pushInObjectInOrder([v1,v2,v3,v4])
+
+		var v1 = parseInt(req.query.v1)*0.22
+		var v2 = parseInt(req.query.v2)*0.22
+		var v3 = parseInt(req.query.v3)*0.22
+		var v4 = parseInt(req.query.v4)*0.22
+
+		ai.addValues(cid,v1,v2,v3,v4)
 		console.log(cid,date,v1,v2,v3,v4)
 		dataBase.createRawInformation(cid,date,v1,v2,v3,v4,function(error){
 			if(error){
