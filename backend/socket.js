@@ -64,14 +64,14 @@ module.exports = (io) => {
     function interval_notification(){
         sockets.forEach(function(s){
             s.user_data.house_ids.forEach(function(house_id){
-                request("https://allamvizsga-akoszsebe.c9users.io/getdeviceswithsettings?house_id="+house_id, function(error, response, body) {
+                request("https://allamvizsga-akoszsebe.c9users.io/api/getdeviceswithsettings?house_id="+house_id, function(error, response, body) {
                     var olddata  = [];
                     var newdata  = [];
                     JSON.parse(body).forEach(function(item){
                         olddata.push(item.original_value)
                     })
                     setTimeout(function(){
-                        request("https://allamvizsga-akoszsebe.c9users.io/getdeviceswithsettings?house_id="+house_id, function(error, response, body) {
+                        request("https://allamvizsga-akoszsebe.c9users.io/api/getdeviceswithsettings?house_id="+house_id, function(error, response, body) {
                             
                             JSON.parse(body).forEach(function(item){
                                 newdata.push(item.original_value)
