@@ -1,7 +1,8 @@
 {
   "name": "SmartHome",
   "description": "SmartHome Backend",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "main": "index.js",
   "keywords": [
     "smarthome"
   ],
@@ -12,10 +13,14 @@
       "web": "https://github.com/vdave007"
     }
   ],
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
-    "express": "^4.14.0",
+    "express": "^4.15.3",
     "mongoose": "^4.7.6",
     "body-parser": "^1.17.1"
+
   },
   "repository": {
     "type": "git",

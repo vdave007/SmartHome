@@ -20,10 +20,14 @@ DataBase.prototype.init = function () {
 		console.error('Could not connect to mongo server!', error)
 	})
 
-	self.mongoose.connect('mongodb://localhost/smartHome',
-		function(err) { 
-			if (err) console.error('error:' + err)
-		 })
+	var connectWithRetry = function() {
+	    return self.mongoose.connect('mongodb://localhost/smartHome', function(err) {
+	        if (err) {
+	            console.error('Failed to connect to mongo on startup - retrying in 1 sec', err);
+	            setTimeout(connectWithRetry, 1000);
+	        }
+	    });
+	};
 }
 
 /**

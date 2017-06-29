@@ -60,6 +60,9 @@ module.exports = (app,dataBase,ai) => {
 		res.send("OK");
 	})
 
+	app.get('/', (req,res) => {
+		res.send("SmartHomeServer")
+	})
 
 
 
