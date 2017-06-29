@@ -1,3 +1,5 @@
+'use strict'
+
 let valueCountsAsSpikeUnder = 10;
 let maximumDiffBetweenSpikes = 3;
 
