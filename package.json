@@ -30,7 +30,8 @@
     "request-json": "^0.6.2",
     "socket.io": "^1.7.3",
     "twilio": "^3.4.0",
-    "validator": "^7.0.0"
+    "validator": "^7.0.0",
+    "array-difference":"^0.0.1"
   },
   "repository": {
     "type": "git",

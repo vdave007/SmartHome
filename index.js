@@ -7,7 +7,9 @@ let express = require('express'),
 	Encrypter = require('./backend/models/Encrypter'),
 	Mail = require('./backend/models/Mail'),
 	Sms = require('./backend/models/Sms'),
-	DeviceSelector = require('./backend/deviceselector')
+	DeviceSelector = require('./backend/deviceselector'),
+	server = require('http').createServer(app),
+	io = require('socket.io')(server)
 
 
 
@@ -22,7 +24,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 })); 
 
 
-app.listen(app.get('port'), () => {
+server.listen(app.get('port'), () => {
 	console.info('App is running on port ', app.get('port'))
 })
 
@@ -39,3 +41,4 @@ var sms = new Sms();
 var deviceselector = new DeviceSelector(dataBase);
 
 require('./backend/routes')(app,dataBase,ai,encrypter,mail,sms,deviceselector)
+require('./backend/socket')(io)
