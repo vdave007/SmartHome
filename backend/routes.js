@@ -299,7 +299,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		if (typeof passwd === 'undefined') {res.json('Wrong password'); return}
 		if (!validator.isEmail(user_email)) {res.json('hakker'); return}
 		
-		db.createUserHouseMessage(user_email,house_id,encrypter.encrypt(passwd),function(err){
+		dataBase.createUserHouseMessage(user_email,house_id,encrypter.encrypt(passwd),function(err){
 			res.json(err)
 		})
 	})
