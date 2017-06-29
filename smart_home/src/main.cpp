@@ -11,6 +11,8 @@
 //Set this to true if you want to download the configuration page and (optional) ID from the backend
 #define FIRST_RUN false
 
+#define REWRITE_CONFIG_PAGE false
+
 //Set this to true ONLY if you want a new CID for the device
 #define CHANGE_CID false
 
@@ -44,7 +46,11 @@ void setup()
   pinMode(SECOND_MUX_PIN,OUTPUT);
   pinMode(THIRD_MUX_PIN,OUTPUT);
   pinMode(CONFIGURATION_MODE_PIN,INPUT);
+  pinMode(RED_LED_PIN,OUTPUT);
+  pinMode(GREEN_LED_PIN,OUTPUT);
   delay(100);
+
+  digitalWrite(RED_LED_PIN,HIGH);
 
   if(digitalRead(CONFIGURATION_MODE_PIN))
   {
@@ -56,6 +62,8 @@ void setup()
   {
     Serial.println("Starting normal mode!");
     netController->connect(configStore->get(MAPID::WIFI_SSID),configStore->get(MAPID::WIFI_PASS));;
+    digitalWrite(RED_LED_PIN,LOW);
+    digitalWrite(GREEN_LED_PIN,HIGH);
 
     if(FIRST_RUN)
     {
@@ -65,10 +73,13 @@ void setup()
         configStore->save(MAPID::DEVICE_ID,configCid);
       }
 
-      std::string configurationPage = netController->get("/device/getConfigurationPage").c_str();
+      if(REWRITE_CONFIG_PAGE)
+      {
+        std::string configurationPage = netController->get("/device/getConfigurationPage").c_str();
 
-      configStore->save(MAPID::CONFIG_PAGE_SIZE,numberToString(configurationPage.length()));
-      configStore->save(MAPID::CONFIG_PAGE,configurationPage);
+        configStore->save(MAPID::CONFIG_PAGE_SIZE,numberToString(configurationPage.length()));
+        configStore->save(MAPID::CONFIG_PAGE,configurationPage);
+      }
     }
     Serial.println();
   }
@@ -82,6 +93,7 @@ int dataToReport[4];
 
 void normalMode()
 {
+  digitalWrite(GREEN_LED_PIN,HIGH);
   for(auto&& it = acsSensors.begin(); it != acsSensors.end(); ++it)
   {
     uint8_t num =(*it)->getSensorNumber();
@@ -93,7 +105,7 @@ void normalMode()
     delay(100);
   }
   netController->report(dataToReport,4);
-
+  digitalWrite(GREEN_LED_PIN,LOW);
   delay(1000);
 }
 
