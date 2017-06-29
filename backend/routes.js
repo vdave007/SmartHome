@@ -1,7 +1,12 @@
 "use strict"
 let path = require('path'),
 	validator = require('validator')
-		
+
+var v1 = 2*1000;
+var v2 = 6.5*1000;
+var v3 = 2.2*1000;
+var v4 = 3.65*1000;
+
 module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 
 	app.get('/device/getConfigurationPage', (req,res) => {
@@ -64,10 +69,10 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		var _date = new Date()
 		var date = _date.getTime()
 
-		var v1 = parseInt(objBody.v1)*0.22
-		var v2 = parseInt(objBody.v2)*0.22
-		var v3 = parseInt(objBody.v3)*0.22
-		var v4 = parseInt(objBody.v4)*0.22
+		v1 = parseInt(objBody.v1)*0.22
+		v2 = parseInt(objBody.v2)*0.22
+		v3 = parseInt(objBody.v3)*0.22
+		v4 = parseInt(objBody.v4)*0.22
 
 		ai.addValues(cid,v1,v2,v3,v4)
 		console.log(cid,date,v1,v2,v3,v4)
@@ -86,14 +91,10 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 	/**
 	 *  routes for android devices 
 	 * 
-	 * 	- add to path /adroid/*   
+	 * 	- add to path /api/*   
 	 */
-	var v1 = 2*1000;
-	var v2 = 6.5*1000;
-	var v3 = 2.2*1000;
-	var v4 = 3.65*1000;
 
-	app.get('/getdeviceswithsettings', (req, res) => { ///getliveamper
+	app.get('/api/getdeviceswithsettings', (req, res) => { ///getliveamper
 			var house_id = req.param('house_id')
 	        console.log("Az utolso Amper",house_id)
 			if (typeof house_id === 'undefined') house_id = "1"
@@ -106,7 +107,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 			})
 	})
 
-	app.get('/setdevicesetting', (req,res) => {
+	app.get('/api/setdevicesetting', (req,res) => {
 	
 		console.log('feltolt setting');
 		
@@ -130,7 +131,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 
-	app.get('/deletedevicesetting', (req,res) => {
+	app.get('/api/deletedevicesetting', (req,res) => {
 	
 		console.log('feltolt setting');
 		
@@ -148,7 +149,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 
-	app.get('/getampers', (req, res) => {
+	app.get('/api/getampers', (req, res) => {
 		var house_id = req.param('house_id')
 		var datefrom = req.param('date_from')
 		var dateto = req.param('date_to')
@@ -161,7 +162,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 
 	})
 
-	app.get('/getdevicesetting', (req, res) => {
+	app.get('/api/getdevicesetting', (req, res) => {
 		var house_id = req.param('house_id')
 		console.log('devsett----')
 		if (typeof house_id === 'undefined') house_id = "1"
@@ -171,7 +172,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 
-	app.get('/gethouses', (req, res) => {
+	app.get('/api/gethouses', (req, res) => {
         console.log("hAzak")
        
 		dataBase.getHouses(function(returndata){
@@ -180,7 +181,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 
-	app.get('/getuserhouses', (req, res) => {
+	app.get('/api/getuserhouses', (req, res) => {
         console.log("hAzak")
         var user_email = req.param('user_email')
 		console.log('devsett----with settings')
@@ -191,7 +192,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 
-	app.get('/gethousesbyname', (req, res) => {
+	app.get('/api/gethousesbyname', (req, res) => {
         console.log("hAzaklkj")
 		var house_name = req.param('house_name')
 		if (typeof house_name === 'undefined' || house_name == "") {res.json(null); return}
@@ -201,7 +202,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 
-	app.get('/gethousesbyid', (req, res) => {
+	app.get('/api/gethousesbyid', (req, res) => {
         console.log("hAzaklkj")
 		var house_id = req.param('house_id')
 		if (typeof house_id === 'undefined' || house_id == "") {res.json(null); return}
@@ -211,7 +212,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 
-	app.get('/sethouse', (req,res) => {
+	app.get('/api/sethouse', (req,res) => {
 			
 		var house_name = req.param('house_name')
 		var house_id = req.param('house_id')
@@ -226,7 +227,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 	
-	app.get('/updatehousename', (req,res) => {
+	app.get('/api/updatehousename', (req,res) => {
 			
 		var house_name = req.param('house_name')
 		var house_id = req.param('house_id')
@@ -239,7 +240,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 
-	app.get('/setuser', (req,res) => {
+	app.get('/api/setuser', (req,res) => {
 			
 		var user_email = req.param('user_email')
 		var password = req.param('password')
@@ -258,7 +259,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 			})
 	})
 
-	app.get('/login', (req,res) => {
+	app.get('/api/login', (req,res) => {
 			
 		var user_email = req.param('user_email')
 		var password = req.param('password')
@@ -274,7 +275,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 
-	app.get('/smartwatchlogin', (req,res) => {
+	app.get('/api/smartwatchlogin', (req,res) => {
 			
 		var smartwatch_id = req.param('smartwatch_id')
 
@@ -287,7 +288,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 
-	app.get('/setuserhouse', (req,res) => {
+	app.get('/api/setuserhouse', (req,res) => {
 			
 		var user_email = req.param('user_email')
 		var house_id = req.param('house_id')
@@ -303,7 +304,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 	
-	app.get('/deleteuserhouse', (req,res) => {
+	app.get('/api/deleteuserhouse', (req,res) => {
 			
 		var user_email = req.param('user_email')
 		var house_id = req.param('house_id')
@@ -317,7 +318,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 
-	app.get('/setusersmartwatch', (req,res) => {
+	app.get('/api/setusersmartwatch', (req,res) => {
 			
 		var user_email = req.param('user_email')
 		var smartwatch_id = req.param('smartwatch_id')
@@ -331,7 +332,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 
-	app.get('/getsmartwatchuser', (req, res) => {
+	app.get('/api/getsmartwatchuser', (req, res) => {
 
         var smartwatch_id = req.param('smartwatch_id')
         console.log("smartwatchuser",smartwatch_id)
@@ -342,7 +343,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 	
-	app.get('/getusersmartwatch', (req, res) => {
+	app.get('/api/getusersmartwatch', (req, res) => {
 
         var user_email = req.param('user_email')
         console.log("usersmartwatches",user_email)
@@ -355,7 +356,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})
 	})
 
-	app.get('/resetuserpassword', (req, res) => {
+	app.get('/api/resetuserpassword', (req, res) => {
 
         var user_email = req.param('user_email')
         var inmail = req.param('inmail')
@@ -369,7 +370,6 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 			var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
 			 return v.toString(16);
 		});
-		mail.sendMail(user_email,reset_code)
 		if (inmail === 'undefined' || inmail === "True")
 		{
 			mail.sendMail(user_email,reset_code)
@@ -403,7 +403,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		})	
 	})
 
-	app.get('/getresetuserpassword', (req, res) => {
+	app.get('/api/getresetuserpassword', (req, res) => {
 
         var user_email = req.param('user_email')
         var reset_code = req.param('reset_code')
