@@ -75,12 +75,12 @@ CurrentAI.prototype.decideWorkingDevices = function(deviceID,circuitNumber,listO
         }
         var calculatedValue = parseInt(listOfLastMeasurements[0])-parseInt(listOfLastMeasurements[1])
         if(parseInt(listOfLastMeasurements[0])-parseInt(listOfLastMeasurements[1]) > deltaDecisionValue){    
-            console.log('NEW DEVICE DETECTED - ', calculatedValue)
+            console.log('\x1b[32m%s\x1b[0m','NEW DEVICE DETECTED - ', calculatedValue)
             this.workingDevices[deviceID][circuitNumber].addDevice(calculatedValue)
 
         }
         else{
-            console.log('DEVICE STOPPED - ', calculatedValue)
+            console.log('\x1b[31m%s\x1b[0m','DEVICE STOPPED - ', calculatedValue)
             this.workingDevices[deviceID][circuitNumber].removeDevice(-calculatedValue)
         }
         console.log(this.workingDevices[deviceID]) 

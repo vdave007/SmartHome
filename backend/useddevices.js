@@ -78,6 +78,9 @@ UsedDevices.prototype.removeAtIndex = function(index){
 	this.totalConsuption = this.totalConsuption - this.devices[index]
 	this.numberOfDevices = this.numberOfDevices - 1
 	this.devices.splice(index,1)
+	if(this.totalConsuption = NaN || this.totalConsuption == 0 || this.numberOfDevices < 0){
+		this.setDevicesToNull()
+	}
 }
 
 UsedDevices.prototype.getWorkingDevices = function(){
