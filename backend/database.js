@@ -407,7 +407,7 @@ DataBase.prototype.createUserHouseMessage = function (u_email,h_id,passwd, _call
 		house_id : h_id
 	})
 	
-	User.findOne({user_email:u_email, password : passwd},function(err, doc) {
+	House.findOne({hid : h_id, password : passwd},function(err, doc) {
 	    if (err || doc == null)
 	    {
 	    	return _callback(err)
