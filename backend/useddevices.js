@@ -12,7 +12,7 @@ UsedDevices.prototype.init = function() {
 }
 
 UsedDevices.prototype.addDevice = function(consumption) {
-	if(consumption < valueCountsAsSpikeUnder/2){
+	if(consumption < valueCountsAsSpikeUnder-2){
 		return
 	}
 	this.totalConsuption = this.totalConsuption + parseInt(consumption)
@@ -33,6 +33,7 @@ UsedDevices.prototype.removeDevice = function(consumption) {
 	}
 	if(consumption > this.totalConsuption){
 		this.setDevicesToNull()
+		return
 	}
 	for(var i=0; i<this.numberOfDevices; i++){
 		if(this.devices[i] - consumption < closestDiff){
@@ -49,11 +50,6 @@ UsedDevices.prototype.removeDevice = function(consumption) {
 		this.removeAtIndex(closestIndex)
 		return
 	}
-	else{ // Remove the closest spike if the difference is not too big
-		if(closestDiff <= maximumDiffBetweenSpikes){
-			this.removeAtIndex(closestIndex)
-			return
-		}
 	}
 	console.warn('Could not find the stoped device!')
 
