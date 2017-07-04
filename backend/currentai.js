@@ -70,9 +70,9 @@ CurrentAI.prototype.decideWorkingDevices = function(deviceID,circuitNumber,listO
     }
 
     if(listOfLastMeasurements[0]!=listOfLastMeasurements[1]){
-        if(listOfLastMeasurements[0] == listOfLastMeasurements[2]){ //Skip a beat, could be spike
-            return
-        }
+        // if(listOfLastMeasurements[0] == listOfLastMeasurements[2]){ //Skip a beat, could be spike
+        //     return
+        // }
         var calculatedValue = parseInt(listOfLastMeasurements[0])-parseInt(listOfLastMeasurements[1])
         if(parseInt(listOfLastMeasurements[0])-parseInt(listOfLastMeasurements[1]) > deltaDecisionValue){    
             console.log('\x1b[32m%s\x1b[0m','NEW DEVICE DETECTED - ', calculatedValue)

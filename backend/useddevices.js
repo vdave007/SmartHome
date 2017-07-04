@@ -39,8 +39,8 @@ UsedDevices.prototype.removeDevice = function(consumption) {
 		return
 	}
 	for(var i=0; i<this.numberOfDevices; i++){
-		if(this.devices[i] - consumption < closestDiff){
-			closestDiff = this.devices[i] - consumption
+		if(Math.abs(this.devices[i] - consumption) < closestDiff){
+			closestDiff = Math.abs(this.devices[i] - consumption)
 			closestIndex = i
 		}
 		if(this.devices[i] == consumption){ // In case if the stopped device exists
