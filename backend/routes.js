@@ -94,7 +94,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 	 * 	- add to path /api/*   
 	 */
 
-	app.get('/api/getdeviceswithsettings', (req, res) => { ///getliveamper
+	app.get('/api/getdeviceswithsettings_old', (req, res) => { ///getliveamper
 			var house_id = req.param('house_id')
 	        console.log("Az utolso Amper",house_id)
 			if (typeof house_id === 'undefined') house_id = "1"
@@ -103,6 +103,19 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 								{"house_id":1,"ampervalue":v3*0.22,"amperdate":123},
 								{"house_id":1,"ampervalue":v4*0.22,"amperdate":123}]
 			deviceselector.asyncGetActualDevicesWithSettings(responseJson,house_id,function(datatouser){
+				res.json(datatouser)
+			})
+	})
+	
+	app.get('/api/getdeviceswithsettings', (req, res) => { ///getliveamper
+			var house_id = req.param('house_id')
+	        console.log("Az utolso Amper",house_id)
+			if (typeof house_id === 'undefined') house_id = "1"
+			
+			var responseJson = ai.getCurrentlyWorkingDevicesJSON(house_id,0)
+			console.log(responseJson)
+			
+			deviceselector.asyncGetActualDevicesWithSettings_New(responseJson,house_id,function(datatouser){
 				res.json(datatouser)
 			})
 	})
@@ -293,7 +306,7 @@ module.exports = (app,dataBase,ai,encrypter,mail,sms,deviceselector) => {
 		var user_email = req.param('user_email')
 		var house_id = req.param('house_id')
 		var passwd = req.param('password')
-		console.log('feltolt userhouse : ' +user_email , house_id);
+		console.log('feltolt userhouse : ' +user_email , house_id,passwd);
 		if (typeof user_email === 'undefined') {res.json('Wrong email'); return}
 		if (typeof house_id === 'undefined') {res.json('Wrong id'); return}
 		if (typeof passwd === 'undefined') {res.json('Wrong password'); return}
