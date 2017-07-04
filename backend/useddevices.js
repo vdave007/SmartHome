@@ -1,6 +1,6 @@
 'use strict'
 
-let valueCountsAsSpikeUnder = 10;
+let valueCountsAsSpikeUnder = 8;
 let maximumDiffBetweenSpikes = 3;
 
 var UsedDevices = module.exports = function () {
@@ -12,7 +12,7 @@ UsedDevices.prototype.init = function() {
 }
 
 UsedDevices.prototype.addDevice = function(consumption) {
-	if(consumption < valueCountsAsSpikeUnder-2){
+	if(consumption < valueCountsAsSpikeUnder){
 		return
 	}
 	this.totalConsuption = this.totalConsuption + parseInt(consumption)
@@ -27,6 +27,9 @@ UsedDevices.prototype.addDevice = function(consumption) {
 UsedDevices.prototype.removeDevice = function(consumption) {
 	var closestDiff = 50;
 	var closestIndex = 0;
+	if(consumption < valueCountsAsSpikeUnder){
+		return
+	}
 	if(this.totalConsuption <= 0){
 		this.setDevicesToNull()
 		return
