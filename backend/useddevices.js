@@ -50,7 +50,6 @@ UsedDevices.prototype.removeDevice = function(consumption) {
 		this.removeAtIndex(closestIndex)
 		return
 	}
-	}
 	console.warn('Could not find the stoped device!')
 
 }
