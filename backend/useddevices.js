@@ -25,8 +25,8 @@ UsedDevices.prototype.addDevice = function(consumption) {
 }
 
 UsedDevices.prototype.removeDevice = function(consumption) {
-	var closestDiff = 50;
-	var closestIndex = 0;
+	var closestDiff = 9999999;
+	var closestIndex = -1;
 	if(consumption < valueCountsAsSpikeUnder){
 		return
 	}
@@ -73,6 +73,10 @@ UsedDevices.prototype.getDevicesSum = function(){
 }
 
 UsedDevices.prototype.removeAtIndex = function(index){
+	if (index < 0)
+	{
+		return
+	}
 	this.totalConsuption = this.totalConsuption - this.devices[index]
 	this.numberOfDevices = this.numberOfDevices - 1
 	this.devices.splice(index,1)
