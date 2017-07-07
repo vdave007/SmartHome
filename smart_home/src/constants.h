@@ -15,10 +15,13 @@ const uint8_t SPI_SDL_PIN = D2;
 
 const uint8_t CONFIGURATION_MODE_PIN = D5;
 
+const uint8_t RED_LED_PIN = D6;
+const uint8_t GREEN_LED_PIN = D7;
+
 
 // const char BACKEND_SERVER_IP[] = "allamvizsga-akoszsebe.c9users.io";
 const char BACKEND_SERVER_IP[] = "192.168.0.12";
-const char BACKEND_POST_API[] = "/saveRawData";
+const char BACKEND_POST_API[] = "/device/saveRawData";
 const uint32_t BACKEND_SERVER_PORT = 8080;
 
 // const std::string WIFI_SSID = "Big_Cats";
